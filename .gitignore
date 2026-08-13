@@ -24,3 +24,6 @@ mindscan-weights.zip
 
 # Machine-local Claude Code settings
 .claude/
+
+# Generated source bundle — regenerate with: python export_codebase.py
+MindScanAI_codebase.txt
