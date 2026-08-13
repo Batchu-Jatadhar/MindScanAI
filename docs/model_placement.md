@@ -12,6 +12,15 @@ backend/models/regression/stress_regressor.pt                # training/train_fu
 backend/models/fusion/multimodal_fusion.pt                   # training/train_fusion.py (trunk only)
 ```
 
+These files **are committed**, so a clone runs the real models with no training step.
+
+`speech_encoder.pt` is stored in a slim format written by
+`training/slim_speech_checkpoint.py`: only the fine-tuned transformer layers and head, since the
+frozen wav2vec2-base weights are identical to what `from_pretrained()` fetches at construction.
+That takes it from 360MB (over GitHub's 100MB limit) to 54MB, bit-identical — verified at a maximum
+logit difference of `0.000e+00`. The loader detects the format via the `__mindscan_slim__` marker and
+completes it from the HuggingFace backbone, so the **first run needs internet**; it is cached after.
+
 `registry.using_mock` (backend/core/model_loader.py) goes `false` once both encoder files are present and
 `USE_MOCK_INFERENCE=false` is set — that switches the facial/speech embeddings used by fusion and the
 Grad-CAM/LIME explainers over to the real trained encoders. The classifier/regressors are gated
